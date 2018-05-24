@@ -47,7 +47,7 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2)
     int carry, sum;
     struct ListNode *pNewList = NULL, *pHead = NULL;
     
-    if (NULL == l1 || NULL == l2) 
+    if (NULL == l1 && NULL == l2) 
     { 
         return NULL; 
     }
