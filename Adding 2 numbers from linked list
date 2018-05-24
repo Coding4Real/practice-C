@@ -1,0 +1,112 @@
+/**
+ * Leetcode 2
+ * https://leetcode.com/problems/add-two-numbers/description/
+ */
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+struct ListNode* createNewNode(int val)
+{
+    struct ListNode *pNewNode = NULL;
+    
+    pNewNode = (struct ListNode *)malloc(sizeof(struct ListNode));
+    if (NULL == pNewNode) 
+    {
+        return NULL;
+    }
+    pNewNode->val = val;
+    pNewNode->next = NULL;
+    
+    return pNewNode;
+}
+
+void freeList(struct ListNode *pList)
+{
+    struct ListNode *pTemp = NULL;
+
+    if (NULL == pList)
+    {
+        return;
+    }
+
+    while (NULL != pList) {
+        pTemp = pList;
+        pList = pList->next;
+        free(pTemp);
+    }
+    return;
+}
+
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) 
+{
+    int carry, sum;
+    struct ListNode *pNewList = NULL, *pHead = NULL;
+    
+    if (NULL == l1 || NULL == l2) 
+    { 
+        return NULL; 
+    }
+    
+    if (NULL == l1) 
+    {
+        return l2;
+    }
+    if (NULL == l2) 
+    {
+        return l1;
+    }
+    carry = sum = 0;
+    while (NULL != l1 || NULL != l2) {
+        int val1 = 0, val2 = 0;
+        struct ListNode *pNewNode = NULL;
+        
+        if (NULL != l1) {
+            val1 = l1->val;
+            l1 = l1->next;
+        }
+        if (NULL != l2) {
+            val2 = l2->val;
+            l2 = l2->next;
+        }
+        
+        sum = val1 + val2 + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        
+        pNewNode = createNewNode(sum);
+        if (NULL == pNewNode)
+        {
+            // OOM. Free the created new list and return NULL.
+            freeList(pHead);
+            return NULL;
+        }
+        if (NULL == pHead)
+        {
+            pNewList = pNewNode;
+            pHead = pNewList;
+        }
+        else 
+        {
+            pNewList->next = pNewNode;
+            pNewList = pNewList->next;
+        }
+    }
+    if (carry > 0) 
+    {
+        struct ListNode *pNewNode = NULL;
+        pNewNode = createNewNode(carry);
+        if (NULL == pNewNode) 
+        {
+            // OOM. Free the created new list
+            freeList(pHead);
+        }
+        pNewList->next = pNewNode;
+    }
+    
+    return pHead;
+}
